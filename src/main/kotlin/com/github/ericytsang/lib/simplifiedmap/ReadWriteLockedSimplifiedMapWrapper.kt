@@ -2,7 +2,7 @@ package com.github.ericytsang.lib.simplifiedmap
 
 import java.util.concurrent.locks.ReentrantReadWriteLock
 
-class ReadWriteLockedSimplifiedMapWrapper<K,V>(val underlying:SimplifiedMap<K,V>):ReadWriteLockedSimplifiedMap<K,V>
+class ReadWriteLockedSimplifiedMapWrapper<K,V:Any>(val underlying:SimplifiedMap<K,V>):ReadWriteLockedSimplifiedMap<K,V>
 {
     override val readWriteLock = ReentrantReadWriteLock()
 
@@ -20,6 +20,24 @@ class ReadWriteLockedSimplifiedMapWrapper<K,V>(val underlying:SimplifiedMap<K,V>
     {
         check(readWriteLock.isWriteLockedByCurrentThread)
         super.clear()
+    }
+
+    override fun put(key:K,value:V):V?
+    {
+        check(readWriteLock.isWriteLockedByCurrentThread)
+        return super.put(key,value)
+    }
+
+    override fun putAll(from:Map<out K,V>)
+    {
+        check(readWriteLock.isWriteLockedByCurrentThread)
+        super.putAll(from)
+    }
+
+    override fun remove(key:K):V?
+    {
+        check(readWriteLock.isWriteLockedByCurrentThread)
+        return super.remove(key)
     }
 
     override fun equals(other:Any?):Boolean = if (other is Map<*,*>)
