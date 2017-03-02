@@ -53,11 +53,15 @@ class ReadWriteLockedSimplifiedMapTest
         try
         {
             map["b"] = null
-            assert(false)
+            throw AssertionError()
         }
-        catch (ex:IllegalStateException)
+        catch (ex:AssertionError)
         {
-            // ignore exception
+            throw ex
+        }
+        catch (ex:Exception)
+        {
+            ex.printStackTrace(System.out)
         }
 
         // state should not have changed
@@ -79,10 +83,15 @@ class ReadWriteLockedSimplifiedMapTest
         {
             map["b"] = 7
             assert(false)
+            throw AssertionError()
         }
-        catch (ex:IllegalStateException)
+        catch (ex:AssertionError)
         {
-            // ignore exception
+            throw ex
+        }
+        catch (ex:Exception)
+        {
+            ex.printStackTrace(System.out)
         }
 
         // state should not have changed

@@ -16,6 +16,12 @@ class ReadWriteLockedSimplifiedMapWrapper<K,V>(val underlying:SimplifiedMap<K,V>
 
     override fun get(key:K):V? = underlying[key]
 
+    override fun clear()
+    {
+        check(readWriteLock.isWriteLockedByCurrentThread)
+        super.clear()
+    }
+
     override fun equals(other:Any?):Boolean = if (other is Map<*,*>)
     {
         other.entries == entries
