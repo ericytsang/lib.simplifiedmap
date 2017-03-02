@@ -1,20 +1,17 @@
 package com.github.ericytsang.lib.simplifiedmap
 
 import java.util.concurrent.locks.ReentrantReadWriteLock
+import kotlin.concurrent.read
 
 class ReadWriteLockedSimplifiedMapWrapper<K,V:Any>(val underlying:SimplifiedMap<K,V>):ReadWriteLockedSimplifiedMap<K,V>
 {
     override val readWriteLock = ReentrantReadWriteLock()
-
-    override val keys:Set<K> get() = underlying.keys
 
     override fun set(key:K,value:V?):V?
     {
         check(readWriteLock.isWriteLockedByCurrentThread)
         return underlying.set(key,value)
     }
-
-    override fun get(key:K):V? = underlying[key]
 
     override fun clear()
     {
@@ -40,16 +37,43 @@ class ReadWriteLockedSimplifiedMapWrapper<K,V:Any>(val underlying:SimplifiedMap<
         return super.remove(key)
     }
 
+    override fun get(key:K):V? = read {underlying[key]}
+
+    override val size:Int get() = read {super.size}
+
+    override fun isEmpty():Boolean = read {super.isEmpty()}
+
+    override fun containsKey(key:K):Boolean = read {super.containsKey(key)}
+
+    override fun containsValue(value:V):Boolean = read {super.containsValue(value)}
+
+    override val entries:Set<Map.Entry<K,V>> get() = read {super.entries}
+
+    override val keys:Set<K> get() = read {underlying.keys}
+
+    override val values:Collection<V> get() = read {super.values}
+
     override fun equals(other:Any?):Boolean = if (other is Map<*,*>)
     {
-        other.entries == entries
+        read {
+            other.entries == entries
+        }
     }
     else
     {
         false
     }
 
-    override fun hashCode():Int = underlying.hashCode()
+    override fun hashCode():Int = read {underlying.hashCode()}
 
-    override fun toString():String = underlying.toString()
+    override fun toString():String = read {underlying.toString()}
+
+    private fun <R> read(block:()->R):R = if (readWriteLock.isWriteLockedByCurrentThread)
+    {
+        block()
+    }
+    else
+    {
+        readWriteLock.read(block)
+    }
 }
