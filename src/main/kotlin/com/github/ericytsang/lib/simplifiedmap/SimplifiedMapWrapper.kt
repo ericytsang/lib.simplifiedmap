@@ -1,6 +1,6 @@
 package com.github.ericytsang.lib.simplifiedmap
 
-class SimplifiedMapWrapper<K,V>(val underlying:MutableMap<K,V>):SimplifiedMap<K,V>
+class SimplifiedMapWrapper<K,V:Any>(val underlying:MutableMap<K,V>):SimplifiedMap<K,V>
 {
     override val keys:Set<K> get() = underlying.keys
 
