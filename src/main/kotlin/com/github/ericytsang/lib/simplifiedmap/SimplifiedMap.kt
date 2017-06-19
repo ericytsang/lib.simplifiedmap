@@ -39,7 +39,13 @@ interface SimplifiedMap<K,V:Any>:Map<K,V>
 
     override fun isEmpty():Boolean = size == 0
 
-    fun clear() = keys.forEach {set(it,null)}
+    fun clear()
+    {
+        while (keys.isNotEmpty())
+        {
+            set(keys.first(),null)
+        }
+    }
 
     override val values:Collection<V> get() = keys.map {get(it)!!}
 

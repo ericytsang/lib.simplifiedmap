@@ -38,4 +38,14 @@ class SimplifiedMapWrapperTest
         assert(map["b"] == 7)
         assert(map["c"] == null)
     }
+
+    @Test
+    fun clearTest()
+    {
+        assert(map["a"] == 3)
+        assert(map["b"] == 4)
+        map.clear()
+        assert(map["a"] == null)
+        assert(map["b"] == null)
+    }
 }
