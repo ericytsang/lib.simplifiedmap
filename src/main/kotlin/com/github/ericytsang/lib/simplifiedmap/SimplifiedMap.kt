@@ -31,7 +31,7 @@ interface SimplifiedMap<K,V:Any>:Map<K,V>
 
     fun putAll(from:Map<out K,V>) = from.entries.forEach {put(it.key,it.value)}
 
-    fun remove(key:K):V? = set(key,null)
+    fun rm(key:K):V? = set(key,null)
 
     override fun containsKey(key:K):Boolean = key in keys
 
@@ -43,7 +43,7 @@ interface SimplifiedMap<K,V:Any>:Map<K,V>
     {
         while (keys.isNotEmpty())
         {
-            set(keys.first(),null)
+            rm(keys.first())
         }
     }
 
