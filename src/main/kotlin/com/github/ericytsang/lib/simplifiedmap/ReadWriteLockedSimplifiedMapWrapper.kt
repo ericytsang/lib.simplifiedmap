@@ -31,10 +31,10 @@ class ReadWriteLockedSimplifiedMapWrapper<K,V:Any>(val underlying:SimplifiedMap<
         super.putAll(from)
     }
 
-    override fun remove(key:K):V?
+    override fun rm(key:K):V?
     {
         check(readWriteLock.isWriteLockedByCurrentThread)
-        return super.remove(key)
+        return super.rm(key)
     }
 
     override fun get(key:K):V? = read {underlying[key]}
